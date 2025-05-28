@@ -26,7 +26,15 @@ export const useFetchDocuments = (docCollection, search = null, uid = null) => {
         let q;
         //busca
         //dashboard
-        q = query(collectionRef, orderBy("createdAt", "desc"));
+        if (search) {
+          q = await query(
+            collectionRef,
+            where("tags", "array-contains", search),
+            orderBy("createdAt", "desc")
+          );
+        } else {
+          q = query(collectionRef, orderBy("createdAt", "desc"));
+        }
         // onSnapshot Cria um "ouvinte em tempo real" que escuta mudanças na coleção!
         onSnapshot(q, (querySnapshot) => {
           setDocuments(
